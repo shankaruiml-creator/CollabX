@@ -2,11 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "pom.xml",
-      "use": "@vercel/java"
+      "src": "target/CollabX-0.0.1-SNAPSHOT.jar",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "target"
+      }
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/"
+    },
     {
       "src": "/(.*)",
       "dest": "/"

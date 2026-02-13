@@ -1,21 +1,29 @@
 # Railway Environment Variables Setup
 
+## IMPORTANT: Railway Private Networking
+
+Railway services in the same project can communicate via private network.
+Use the **internal** MySQL variables, not public ones.
+
 ## Required Environment Variables in Railway Dashboard:
 
 1. **DATABASE_URL**
    ```
-   jdbc:mysql://<railway-mysql-host>:<port>/<database>?useSSL=true&allowPublicKeyRetrieval=true
+   jdbc:mysql://${{MySQL.MYSQL_PRIVATE_URL}}?allowPublicKeyRetrieval=true
    ```
-   Example: `jdbc:mysql://containers-us-west-123.railway.app:6789/railway?useSSL=true&allowPublicKeyRetrieval=true`
+   OR manually:
+   ```
+   jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?allowPublicKeyRetrieval=true
+   ```
 
 2. **DB_USERNAME**
    ```
-   root
+   ${{MySQL.MYSQLUSER}}
    ```
 
 3. **DB_PASSWORD**
    ```
-   <your-mysql-password>
+   ${{MySQL.MYSQLPASSWORD}}
    ```
 
 4. **JWT_SECRET**
@@ -33,39 +41,42 @@
    pniw nqjm huio kwvm
    ```
 
-7. **PORT** (Railway sets this automatically, but add if needed)
-   ```
-   8080
-   ```
+## Steps to Fix "Connection Refused" Error:
 
-## Steps to Add MySQL Database in Railway:
+1. **Add MySQL to your Railway project:**
+   - Click "+ New" in your project
+   - Select "Database" → "MySQL"
+   - Wait for it to deploy (green status)
 
-1. In your Railway project, click "+ New"
-2. Select "Database" → "MySQL"
-3. Wait for deployment
-4. Click on MySQL service → "Variables" tab
-5. Copy these values:
-   - MYSQLHOST
-   - MYSQLPORT
-   - MYSQLDATABASE
-   - MYSQLUSER
-   - MYSQLPASSWORD
+2. **Link services using Railway variables:**
+   - Go to your Spring Boot service → "Variables" tab
+   - Click "+ New Variable" → "Add Reference"
+   - Use the format above with `${{MySQL.VARIABLE_NAME}}`
 
-6. Create DATABASE_URL using format above
-7. Add all variables to your Spring Boot service
+3. **Or copy values manually:**
+   - Go to MySQL service → "Variables" tab
+   - Copy MYSQLHOST, MYSQLPORT, MYSQLDATABASE, MYSQLUSER, MYSQLPASSWORD
+   - Add them to your Spring Boot service
 
-## Common Issues:
+## Example (Using Railway References - RECOMMENDED):
 
-### App crashes immediately:
-- Check logs: Railway Dashboard → Your Service → Deployments → View Logs
-- Verify DATABASE_URL format is correct
-- Ensure MySQL service is running
+```
+DATABASE_URL=jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?allowPublicKeyRetrieval=true
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+JWT_SECRET=collabxSecretKeyForJWTSecurityAndCommunicationNationwide2024
+MAIL_USERNAME=shankar.uiml@gmail.com
+MAIL_PASSWORD=pniw nqjm huio kwvm
+```
 
-### Database connection error:
-- Make sure MySQL service is deployed first
-- Check if MYSQLHOST and MYSQLPORT are correct
-- Verify allowPublicKeyRetrieval=true is in DATABASE_URL
+## Troubleshooting:
 
-### Port binding error:
-- Railway automatically sets PORT variable
-- Make sure Dockerfile uses ${PORT:-8080}
+### "Connection refused" error:
+- MySQL service must be in the SAME Railway project
+- Use private network variables (MYSQLHOST, not public URL)
+- Both services must be deployed and running
+
+### "Communications link failure":
+- Check DATABASE_URL format
+- Ensure allowPublicKeyRetrieval=true is present
+- Verify MySQL service is running (green status)

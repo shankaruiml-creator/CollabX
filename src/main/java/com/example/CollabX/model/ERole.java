@@ -1,0 +1,12 @@
+package com.example.CollabX.model;
+
+public enum ERole {
+    ROLE_STUDENT,
+    ROLE_COLLEGE,
+    ROLE_ADMIN,
+    ROLE_ESP_PRESIDENT,
+    ROLE_ESP_VICE_PRESIDENT,
+    ROLE_ESP_REGISTER_1,
+    ROLE_ESP_REGISTER_2,
+    ROLE_ESP_REGISTER_3
+}

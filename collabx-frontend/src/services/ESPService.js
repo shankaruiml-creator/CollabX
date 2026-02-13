@@ -1,7 +1,6 @@
 import axios from "axios";
-import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:8080/api/esps";
+const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/esps` : "http://localhost:8080/api/esps";
 
 const addESP = (username, email, password, role, collegeId) => {
   return axios.post(
@@ -13,14 +12,13 @@ const addESP = (username, email, password, role, collegeId) => {
       role: [role],
     },
     {
-      headers: authHeader(),
       params: { collegeId },
     }
   );
 };
 
 const getESPsByCollege = (collegeId) => {
-  return axios.get(API_URL + "/college/" + collegeId, { headers: authHeader() });
+  return axios.get(API_URL + "/college/" + collegeId);
 };
 
 const ESPService = {

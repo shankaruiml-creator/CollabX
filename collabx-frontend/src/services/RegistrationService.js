@@ -1,22 +1,21 @@
 import axios from "axios";
-import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:8080/api/registrations";
+const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/registrations` : "http://localhost:8080/api/registrations";
 
 const registerForEvent = (registrationData) => {
-  return axios.post(API_URL, registrationData, { headers: authHeader() });
+  return axios.post(API_URL, registrationData);
 };
 
 const getStudentRegistrations = (studentId) => {
-  return axios.get(`${API_URL}/student/${studentId}`, { headers: authHeader() });
+  return axios.get(`${API_URL}/student/${studentId}`);
 };
 
 const getRegistrationDetails = (studentId, eventId) => {
-  return axios.get(`${API_URL}/check?studentId=${studentId}&eventId=${eventId}`, { headers: authHeader() });
+  return axios.get(`${API_URL}/check?studentId=${studentId}&eventId=${eventId}`);
 };
 
 const getEventRegistrations = (eventId) => {
-  return axios.get(`${API_URL}/event/${eventId}`, { headers: authHeader() });
+  return axios.get(`${API_URL}/event/${eventId}`);
 };
 
 const RegistrationService = {

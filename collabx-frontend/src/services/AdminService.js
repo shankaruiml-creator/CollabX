@@ -1,22 +1,21 @@
 import axios from "axios";
-import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:8080/api/admin";
+const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/admin` : "http://localhost:8080/api/admin";
 
 const getStats = () => {
-  return axios.get(API_URL + "/stats", { headers: authHeader() });
+  return axios.get(API_URL + "/stats");
 };
 
 const getPendingColleges = () => {
-  return axios.get(API_URL + "/pending-colleges", { headers: authHeader() });
+  return axios.get(API_URL + "/pending-colleges");
 };
 
 const verifyCollege = (id) => {
-  return axios.put(API_URL + `/colleges/${id}/verify`, {}, { headers: authHeader() });
+  return axios.put(API_URL + `/colleges/${id}/verify`, {});
 };
 
 const rejectCollege = (id) => {
-  return axios.delete(API_URL + `/colleges/${id}/reject`, { headers: authHeader() });
+  return axios.delete(API_URL + `/colleges/${id}/reject`);
 };
 
 const AdminService = {
